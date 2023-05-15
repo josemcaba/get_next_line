@@ -14,6 +14,7 @@ typedef struct s_list
     char            *content;
     struct s_list   *next;
     int             nl_flag;
+    int             nls;
 }   t_list;
 
 char	*get_next_line(int fd);
