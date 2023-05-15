@@ -7,8 +7,10 @@ int read_line(char *buffer, t_list **list, int fd)
     int     len;
     t_list  *node;
     int     i;
+    int     nl_flag;
 
-    while (1)
+    nl_flag = 0;
+    while (!nl_flag)
     {
         buff_len = read(fd, buffer, BUFFER_SIZE);
         if (buff_len == -1)
@@ -17,7 +19,7 @@ int read_line(char *buffer, t_list **list, int fd)
         i = 0;
         while (i < buff_len)
         {
-            len = str_len(&(buffer[i]));
+            len = str_len(&(buffer[i]), &nl_flag);
             node = lst_new_node((char *)malloc(len * sizeof(char) + 1));
             if (!node)
                 return(-1);
@@ -25,8 +27,6 @@ int read_line(char *buffer, t_list **list, int fd)
             lst_add_node(list, node);
             i += len;
         }
-        if (node->content[len - 1] == '\n')
-            break;
     }
     return (len);
 }
@@ -37,12 +37,12 @@ char *write_line(t_list *list)
 
     if (!list)
         return(NULL);
-    while (list)
+    while (list->next)
     {
         printf(list->content);
         list = list->next;
     }
-    return ("HOLA");
+    return (NULL);
 }
 
 char	*get_next_line(int fd)

@@ -12,9 +12,9 @@ void	ft_leaks(void)
 int main(int argc, char *argv[])
 {
     int fd;
-    char *line;
+//    char *line;
 
-//	atexit(ft_leaks);
+	atexit(ft_leaks);
     printf("%d : %s\n", argc, argv[argc - 1]);
     printf("%d\n", BUFFER_SIZE);
     fd = open (argv[1], O_RDONLY);
@@ -23,11 +23,24 @@ int main(int argc, char *argv[])
         printf("Error: open() failed\n");
         return (1);
     }
-    line = get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
+    get_next_line(fd);
 //    line = get_next_line(fd);    
 //    free (line);
-    printf(line);
-    free(line);
+    //printf(line);
+    //free(line);
     if (close(fd) == -1)
     {
         printf("Error: close() failed\n");

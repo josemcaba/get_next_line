@@ -51,7 +51,7 @@ void mem_cpy_str(char *dst, char *src, size_t len)
         dst[len] = src[len];
 }
 
-int str_len(char *str)
+int str_len(char *str, int *nl_flag)
 {
     int i;
 
@@ -59,6 +59,9 @@ int str_len(char *str)
     while ((str[i] != '\n') && (str[i] != '\0'))
         i++;
     if (str[i] == '\n')
+    {
+        *nl_flag = 1;
         i++;
+    }
     return (i);
 }

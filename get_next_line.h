@@ -2,7 +2,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 13
+#  define BUFFER_SIZE 10
 # endif
 
 // # include "../libft/libft.h"
@@ -20,6 +20,6 @@ t_list *lst_new_node(void *content);
 void     lst_add_node(t_list **list, t_list *node);
 void    lst_free(t_list **lst);
 void mem_cpy_str(char *dst, char *src, size_t len);
-int str_len(char *str);
+int str_len(char *str, int *nl_flag);
 
 #endif

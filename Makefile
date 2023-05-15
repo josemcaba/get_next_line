@@ -18,5 +18,8 @@ $(NAME) : $(SRC) $(HDR)
 clean :
 	rm -f $(OBJ)
 
-re : clean all
+fclean: clean
+	rm -f $(NAME)
+
+re : fclean all
 
