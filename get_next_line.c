@@ -31,19 +31,42 @@ int read_line(char *buffer, t_list **list, int fd)
     return (len);
 }
 
-char *write_line(t_list *list)
+char *write_line(t_list **list)
 {
     //char    *line;
+    t_list  *next_node;
+    int     nl_flag;
 
-    if (!list)
+    if (!*list)
         return(NULL);
-    while (list->next)
+    nl_flag = 0;
+    while (*list && !nl_flag)
     {
-        printf(list->content);
-        list = list->next;
+        printf((*list)->content);
+        nl_flag = (*list)->nl_flag;
+        next_node = (*list)->next;
+        free((*list)->content);
+        free(*list);
+        *list = next_node;
     }
     return (NULL);
 }
+
+// char *write_line(t_list *list)
+// {
+//     //char    *line;
+
+//     if (!list)
+//         return(NULL);
+//     while (list->next)
+//     {
+//         printf(list->content);
+//         if (list->nl_flag)
+//             break;
+//         list = list->next;
+//     }
+//     return (NULL);
+// }
 
 char	*get_next_line(int fd)
 {
@@ -59,7 +82,7 @@ char	*get_next_line(int fd)
     if (len < 0)
         return (NULL);
     free(buffer);
-    line = write_line(list);
-    lst_free(&list);
+    line = write_line(&list);
+//    lst_free(&list);
     return (line);
 }

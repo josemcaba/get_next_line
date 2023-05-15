@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-t_list *lst_new_node(void *content)
+t_list *lst_new_node(char *content)
 {
     t_list  *node;
 
@@ -10,13 +10,19 @@ t_list *lst_new_node(void *content)
         return(0);
     node->content = content;
     node->next = NULL;
+    node->nl_flag = 0;
     return (node);
 }
 
 void   lst_add_node(t_list **list, t_list *node)
 {
     t_list  *last_node;
+    int     i;
 
+    i = 0;
+    while (node->content[i])
+        if (node->content[i++] == '\n')
+            node->nl_flag = 1;
     if (!(*list))
         *list = node;
     else
@@ -41,6 +47,8 @@ void    lst_free(t_list **list)
         free((*list)->content);
         free(*list);
         *list = next_node;
+        if ((*list)->nl_flag)
+            break;
     }
 }
 
