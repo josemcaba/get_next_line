@@ -11,7 +11,7 @@ CC = gcc -Wall -Werror -Wextra
 all : $(NAME)
 
 $(NAME) : $(SRC) $(HDR)
-	$(CC) $(SRC)
+	$(CC) $(SRC) -o $(NAME)
 	./a.exe lorem.txt
 	rm ./a.exe
 
