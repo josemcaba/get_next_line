@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/15 23:21:27 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/16 22:34:29 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ char	*write_line(t_list **list)
 	i = 0;
 	while (*list && !nl_flag)
 	{
+		nl_flag = (*list)->nl_flag;
 		mem_cpy_str(&line[i], (*list)->content, (*list)->len);
 		i += (*list)->len;
-		nl_flag = (*list)->nl_flag;
 		next_node = (*list)->next;
 		free((*list)->content);
 		free(*list);
@@ -94,8 +94,8 @@ int	read_buff(t_list **list, int fd)
 	while (buff_len && (!*list || !(*list)->nl))
 	{
 		buff_len = read(fd, buffer, BUFFER_SIZE);
-		if (buff_len == -1)
-			return (-1);
+		if (buff_len < 0)
+			break ;
 		buffer[buff_len] = '\0';
 		i = 0;
 		while (i < buff_len)
@@ -105,7 +105,7 @@ int	read_buff(t_list **list, int fd)
 		}
 	}
 	free(buffer);
-	return (1);
+	return (buff_len);
 }
 
 char	*get_next_line(int fd)
@@ -114,10 +114,12 @@ char	*get_next_line(int fd)
 	char			*line;
 	static t_list	*list;
 
+	if ((fd < 0) || BUFFER_SIZE <= 0)
+		return (NULL);
 	len = 0;
 	if (!list || !list->nl)
 		len = read_buff(&list, fd);
-	if (len < 0)
+	if ((len < 0) || !list)
 		return (NULL);
 	line = write_line(&list);
 	return (line);

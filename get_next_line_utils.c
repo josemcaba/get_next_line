@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:55:23 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/15 23:47:48 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/16 21:44:18 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,12 @@ void	lst_free(t_list **list)
 
 void	mem_cpy_str(char *dst, char *src, size_t len)
 {
-	dst[len] = '\0';
-	while (len--)
-		dst[len] = src[len];
+	if (len != 0)
+	{
+		dst[len] = '\0';
+		while (len--)
+			dst[len] = src[len];
+	}
 }
 
 int	str_len(char *str, int *nl_flag)

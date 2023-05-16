@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/16 19:54:52 by jocaball          #+#    #+#             */
+/*   Updated: 2023/05/16 22:32:05 by jocaball         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -10,9 +22,10 @@ void	ft_leaks(void)
 
 int	main(int argc, char *argv[])
 {
-	int	fd;
-	int	i;
-	char *line;
+	int		fd;
+	char	*line;
+
+	printf("%d\n", getdtablesize());
 
 	atexit(ft_leaks);
 	printf("%d : %s\n", argc, argv[argc - 1]);
@@ -23,14 +36,13 @@ int	main(int argc, char *argv[])
 		printf("Error: open() failed\n");
 		return (1);
 	}
-	i = 0;
-	while (i++ < 20)
+	line = "";
+	while (line)
 	{
 		line = get_next_line(fd);
-		printf("%3d : %s", i, line);
+		printf("%s", line);
 		free(line);
 	}
-
 	if (close(fd) == -1)
 	{
 		printf("Error: close() failed\n");
