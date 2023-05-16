@@ -12,6 +12,7 @@ int	main(int argc, char *argv[])
 {
 	int	fd;
 	int	i;
+	char *line;
 
 	atexit(ft_leaks);
 	printf("%d : %s\n", argc, argv[argc - 1]);
@@ -25,8 +26,9 @@ int	main(int argc, char *argv[])
 	i = 0;
 	while (i++ < 20)
 	{
-		printf("%3d : ", i);
-		get_next_line(fd);
+		line = get_next_line(fd);
+		printf("%3d : %s", i, line);
+		free(line);
 	}
 
 	if (close(fd) == -1)

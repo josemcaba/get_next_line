@@ -29,15 +29,29 @@ char	*write_line(t_list **list)
 	t_list	*next_node;
 	int		nl_flag;
 	char	*line;
+	int		len;
+	int		i;
 
-	line = NULL;
 	if (!*list)
 		return (NULL);
 	nl_flag = 0;
+	next_node = *list;
+	len = 0;
+	while (next_node && !nl_flag)
+	{
+		len += next_node->len;
+		nl_flag = next_node->nl_flag;
+		next_node = next_node->next;
+	}
+	line = (char *)malloc(len * sizeof(char));
+	if (!line)
+		return (NULL);
+	nl_flag = 0;
+	i = 0;
 	while (*list && !nl_flag)
 	{
-		ft_putstr((*list)->content);
-//		cp_to_line(&line, (*list)->content, (*list)->len);
+		mem_cpy_str(&line[i], (*list)->content, (*list)->len);
+		i += (*list)->len;
 		nl_flag = (*list)->nl_flag;
 		next_node = (*list)->next;
 		free((*list)->content);
