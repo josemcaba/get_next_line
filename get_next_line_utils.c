@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-t_list	*lst_new_node(char *content, int nl_flag)
+t_list	*lst_new_node(char *content, int nl_flag, int len)
 {
 	t_list	*node;
 
@@ -23,7 +23,8 @@ t_list	*lst_new_node(char *content, int nl_flag)
 	node->content = content;
 	node->next = NULL;
 	node->nl_flag = nl_flag;
-	node->nls = nl_flag;
+	node->nl = nl_flag;
+	node->len = len;
 	return (node);
 }
 
@@ -36,24 +37,21 @@ void	lst_add_node(t_list **list, t_list *node)
 	else
 	{
 		last_node = *list;
-		last_node->nls += node->nls;
+		last_node->nl += node->nl;
 		while (last_node->next)
 		{
 			last_node = last_node->next;
-			last_node->nls += node->nls;
+			last_node->nl += node->nl;
 		}
 		last_node->next = node;
 	}
 }
 
-// Libera todos los nodos salvo el ultimo
-// Que se conserva para la siguiente lectura
-// Por eso la lista es declarada static
 void	lst_free(t_list **list)
 {
 	t_list	*next_node;
 
-	while (*list) // && ((*list)->next))
+	while (*list)
 	{
 		next_node = (*list)->next;
 		free((*list)->content);

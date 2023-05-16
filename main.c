@@ -24,8 +24,11 @@ int	main(int argc, char *argv[])
 	}
 	i = 0;
 	while (i++ < 20)
+	{
+		printf("%3d : ", i);
 		get_next_line(fd);
-	get_next_line(fd);
+	}
+
 	if (close(fd) == -1)
 	{
 		printf("Error: close() failed\n");
