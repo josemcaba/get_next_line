@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:50:52 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/16 22:37:53 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/16 23:12:07 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 10
 # endif
 
-// # include "../libft/libft.h"
-# include <sys/stat.h>
 # include <stdlib.h>
+# include <unistd.h>
 
 typedef struct s_list
 {

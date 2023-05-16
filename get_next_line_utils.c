@@ -6,11 +6,10 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:55:23 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/16 21:44:18 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/17 01:17:59 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "get_next_line.h"
 
 t_list	*lst_new_node(char *content, int nl_flag, int len)
@@ -19,7 +18,7 @@ t_list	*lst_new_node(char *content, int nl_flag, int len)
 
 	node = (t_list *)malloc(sizeof(t_list));
 	if (!node)
-		return (0);
+		return (NULL);
 	node->content = content;
 	node->next = NULL;
 	node->nl_flag = nl_flag;
@@ -57,19 +56,14 @@ void	lst_free(t_list **list)
 		free((*list)->content);
 		free(*list);
 		*list = next_node;
-		if ((*list)->nl_flag)
-			break ;
 	}
 }
 
 void	mem_cpy_str(char *dst, char *src, size_t len)
 {
-	if (len != 0)
-	{
-		dst[len] = '\0';
+	if ((char *)dst && (char *)src)
 		while (len--)
-			dst[len] = src[len];
-	}
+			*(dst + len) = *(src + len);
 }
 
 int	str_len(char *str, int *nl_flag)

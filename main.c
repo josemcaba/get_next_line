@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 19:54:52 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/16 22:32:05 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/16 23:17:40 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ int	main(int argc, char *argv[])
 {
 	int		fd;
 	char	*line;
-
-	printf("%d\n", getdtablesize());
 
 	atexit(ft_leaks);
 	printf("%d : %s\n", argc, argv[argc - 1]);

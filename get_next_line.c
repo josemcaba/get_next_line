@@ -6,22 +6,30 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/16 22:34:29 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/17 01:15:16 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-#include <unistd.h>
 
-void	ft_putstr(char *s)
+char	*alloc_line(t_list **list)
 {
-	size_t	i;
+	int		nl_flag;
+	t_list	*node;
+	int		len;
+	char	*line;
 
-	i = 0;
-	while (s[i])
-		i++;
-	write(1, s, i);
+	nl_flag = 0;
+	node = *list;
+	len = 0;
+	while (node && !nl_flag)
+	{
+		len += node->len;
+		nl_flag = node->nl_flag;
+		node = node->next;
+	}
+	line = (char *)malloc(len * sizeof(char) + 1);
+	return (line);
 }
 
 char	*write_line(t_list **list)
@@ -29,21 +37,9 @@ char	*write_line(t_list **list)
 	t_list	*next_node;
 	int		nl_flag;
 	char	*line;
-	int		len;
 	int		i;
 
-	if (!*list)
-		return (NULL);
-	nl_flag = 0;
-	next_node = *list;
-	len = 0;
-	while (next_node && !nl_flag)
-	{
-		len += next_node->len;
-		nl_flag = next_node->nl_flag;
-		next_node = next_node->next;
-	}
-	line = (char *)malloc(len * sizeof(char));
+	line = alloc_line(&(*list));
 	if (!line)
 		return (NULL);
 	nl_flag = 0;
@@ -58,6 +54,7 @@ char	*write_line(t_list **list)
 		free(*list);
 		*list = next_node;
 	}
+	line[i] = '\0';
 	return (line);
 }
 
@@ -80,6 +77,11 @@ int	lst_add(char *buffer, t_list **list)
 	return (len);
 }
 
+//			if (len < 0)
+//			{   
+//				buff_len = -1;
+//				break ;
+//			}
 int	read_buff(t_list **list, int fd)
 {
 	char	*buffer;
@@ -88,7 +90,7 @@ int	read_buff(t_list **list, int fd)
 	int		len;
 
 	buffer = (char *)malloc(BUFFER_SIZE * sizeof(char) + 1);
-	if (!buffer || !BUFFER_SIZE)
+	if (!buffer)
 		return (-1);
 	buff_len = 1;
 	while (buff_len && (!*list || !(*list)->nl))
@@ -120,7 +122,10 @@ char	*get_next_line(int fd)
 	if (!list || !list->nl)
 		len = read_buff(&list, fd);
 	if ((len < 0) || !list)
+	{
+		lst_free(&list);
 		return (NULL);
+	}
 	line = write_line(&list);
 	return (line);
 }
