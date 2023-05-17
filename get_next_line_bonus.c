@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/17 01:59:20 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/17 02:03:51 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,6 @@ int	lst_add(char *buffer, t_list **list)
 	return (len);
 }
 
-//			if (len < 0)
-//			{   
-//				buff_len = -1;
-//				break ;
-//			}
 int	read_buff(t_list **list, int fd)
 {
 	char	*buffer;
