@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/17 01:15:16 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/17 01:59:20 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*alloc_line(t_list **list)
 {
@@ -114,18 +114,18 @@ char	*get_next_line(int fd)
 {
 	int				len;
 	char			*line;
-	static t_list	*list;
+	static t_list	*list[1024];
 
 	if ((fd < 0) || BUFFER_SIZE <= 0)
 		return (NULL);
 	len = 0;
-	if (!list || !list->nl)
-		len = read_buff(&list, fd);
-	if ((len < 0) || !list)
+	if (!list[fd] || !list[fd]->nl)
+		len = read_buff(&list[fd], fd);
+	if ((len < 0) || !list[fd])
 	{
-		lst_free(&list);
+		lst_free(&list[fd]);
 		return (NULL);
 	}
-	line = write_line(&list);
+	line = write_line(&list[fd]);
 	return (line);
 }
