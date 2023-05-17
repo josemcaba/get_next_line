@@ -81,28 +81,28 @@ int	read_buff(t_list **list, int fd)
 {
 	char	*buffer;
 	int		i;
-	int		buff_len;
+	int		read_len;
 	int		len;
 
 	buffer = (char *)malloc(BUFFER_SIZE * sizeof(char) + 1);
 	if (!buffer)
 		return (-1);
-	buff_len = 1;
-	while (buff_len && (!*list || !(*list)->nl))
+	read_len = 1;
+	while (read_len && (!*list || !(*list)->nl))
 	{
-		buff_len = read(fd, buffer, BUFFER_SIZE);
-		if (buff_len < 0)
+		read_len = read(fd, buffer, BUFFER_SIZE);
+		if (read_len < 0)
 			break ;
-		buffer[buff_len] = '\0';
+		buffer[read_len] = '\0';
 		i = 0;
-		while (i < buff_len)
+		while (i < read_len)
 		{
 			len = lst_add(&(buffer[i]), &(*list));
 			i += len;
 		}
 	}
 	free(buffer);
-	return (buff_len);
+	return (read_len);
 }
 
 char	*get_next_line(int fd)
