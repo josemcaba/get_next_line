@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/17 02:03:51 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/20 19:23:20 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,31 +58,35 @@ char	*write_line(t_list **list)
 	return (line);
 }
 
-int	lst_add(char *buffer, t_list **list)
+int	lst_add(char *buffer, t_list **list, int read_len)
 {
 	int		len;
 	int		nl_flag;
 	t_list	*node;
 	char	*content;
+	int		i;
 
-	len = str_len(buffer, &nl_flag);
-	content = (char *)malloc(len * sizeof(char) + 1);
-	if (!content)
-		return (-1);
-	mem_cpy_str(content, buffer, len);
-	node = lst_new_node(content, nl_flag, len);
-	if (!node)
-		return (-1);
-	lst_add_node(&(*list), node);
-	return (len);
+	i = 0;
+	while (i < read_len)
+	{
+		len = str_len(&buffer[i], &nl_flag);
+		content = (char *)malloc(len * sizeof(char) + 1);
+		if (!content)
+			return (-1);
+		mem_cpy_str(content, &buffer[i], len);
+		node = lst_new_node(content, nl_flag, len);
+		if (!node)
+			return (-1);
+		lst_add_node(&(*list), node);
+		i += len;
+	}
+	return (read_len);
 }
 
 int	read_buff(t_list **list, int fd)
 {
 	char	*buffer;
-	int		i;
 	int		read_len;
-	int		len;
 
 	buffer = (char *)malloc(BUFFER_SIZE * sizeof(char) + 1);
 	if (!buffer)
@@ -94,12 +98,7 @@ int	read_buff(t_list **list, int fd)
 		if (read_len < 0)
 			break ;
 		buffer[read_len] = '\0';
-		i = 0;
-		while (i < read_len)
-		{
-			len = lst_add(&(buffer[i]), &(*list));
-			i += len;
-		}
+		read_len = lst_add(buffer, &(*list), read_len);
 	}
 	free(buffer);
 	return (read_len);
