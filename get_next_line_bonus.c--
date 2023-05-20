@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/20 19:23:20 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/20 19:28:18 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,9 @@ char	*get_next_line(int fd)
 	if ((len < 0) || !list[fd])
 	{
 		lst_free(&list[fd]);
-		return (NULL);
+		line = NULL;
 	}
-	line = write_line(&list[fd]);
+	else
+		line = write_line(&list[fd]);
 	return (line);
 }

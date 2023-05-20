@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/17 02:08:25 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/20 22:16:11 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,12 @@ int	lst_add(char *buffer, t_list **list)
 
 	len = str_len(buffer, &nl_flag);
 	content = (char *)malloc(len * sizeof(char) + 1);
+	// Provocar fallo de malloc y asegurar liberacion de buffer y list
 	if (!content)
+	{
+//		lst_free(&(*list));
 		return (-1);
+	}
 	mem_cpy_str(content, buffer, len);
 	node = lst_new_node(content, nl_flag, len);
 	if (!node)
@@ -88,21 +92,22 @@ int	read_buff(t_list **list, int fd)
 	if (!buffer)
 		return (-1);
 	read_len = 1;
-	while (read_len && (!*list || !(*list)->nl))
+	while (read_len && (!*list || !(*list)->nl) && (len >= 0))
 	{
 		read_len = read(fd, buffer, BUFFER_SIZE);
 		if (read_len < 0)
 			break ;
 		buffer[read_len] = '\0';
 		i = 0;
-		while (i < read_len)
+		while ((i < read_len) && (len >= 0))
 		{
 			len = lst_add(&(buffer[i]), &(*list));
-			i += len;
+			if (len != -1)
+				i += len;
 		}
 	}
 	free(buffer);
-	return (read_len);
+	return (read_len); // No cambiar
 }
 
 char	*get_next_line(int fd)

@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 19:54:52 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/16 23:17:40 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/20 21:35:02 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,19 @@ int	main(int argc, char *argv[])
 	char	*line;
 
 	atexit(ft_leaks);
-	printf("%d : %s\n", argc, argv[argc - 1]);
-	printf("BUFFER SIZE = %d\n", BUFFER_SIZE);
+	printf("%d : %s\nBUFFER SIZE = %d\n", argc, argv[argc - 1], BUFFER_SIZE);
 	fd = open ("lorem.txt", O_RDONLY);
 	if (fd == -1)
 	{
 		printf("Error: open() failed\n");
 		return (1);
 	}
-	line = "";
-	while (line)
+	while (1)
 	{
 		line = get_next_line(fd);
-		printf("%s", line);
+		if (!line)
+			break ;
+		printf("%s-.-", line);
 		free(line);
 	}
 	if (close(fd) == -1)
