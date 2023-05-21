@@ -25,15 +25,15 @@ typedef struct s_list
 	char			*content;
 	struct s_list	*next;
 	int				nl_flag;
-	int				nl;
-	int				len;
+	size_t			nl;
+	size_t			len;
 }	t_list;
 
 char	*get_next_line(int fd);
-t_list	*lst_new_node(char *content, int nl_flag, int len);
+t_list	*lst_new_node(char *content, int nl_flag, size_t len);
 void	lst_add_node(t_list **list, t_list *node);
 void	lst_free(t_list **lst);
 void	mem_cpy_str(char *dst, char *src, size_t len);
-int		str_len(char *str, int *nl_flag);
+size_t	str_len(char *str, int *nl_flag);
 
 #endif

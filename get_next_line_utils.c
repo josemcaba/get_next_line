@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-t_list	*lst_new_node(char *content, int nl_flag, int len)
+t_list	*lst_new_node(char *content, int nl_flag, size_t len)
 {
 	t_list	*node;
 
@@ -66,9 +66,9 @@ void	mem_cpy_str(char *dst, char *src, size_t len)
 			*(dst + len) = *(src + len);
 }
 
-int	str_len(char *str, int *nl_flag)
+size_t	str_len(char *str, int *nl_flag)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	*nl_flag = 0;

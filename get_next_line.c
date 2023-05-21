@@ -16,7 +16,7 @@ char	*alloc_line(t_list **list)
 {
 	int		nl_flag;
 	t_list	*node;
-	int		len;
+	size_t	len;
 	char	*line;
 
 	nl_flag = 0;
@@ -37,7 +37,7 @@ char	*write_line(t_list **list)
 	t_list	*next_node;
 	int		nl_flag;
 	char	*line;
-	int		i;
+	size_t	i;
 
 	line = alloc_line(&(*list));
 	if (!line)
@@ -58,61 +58,60 @@ char	*write_line(t_list **list)
 	return (line);
 }
 
-int	lst_add(char *buffer, t_list **list)
+ssize_t	add_node_to_list(char *buffer, t_list **list)
 {
-	int		len;
+	ssize_t	len;
 	int		nl_flag;
 	t_list	*node;
 	char	*content;
 
 	len = str_len(buffer, &nl_flag);
 	content = (char *)malloc(len * sizeof(char) + 1);
-	// Provocar fallo de malloc y asegurar liberacion de buffer y list
 	if (!content)
-	{
-//		lst_free(&(*list));
 		return (-1);
-	}
 	mem_cpy_str(content, buffer, len);
 	node = lst_new_node(content, nl_flag, len);
 	if (!node)
+	{
+		free(content);
 		return (-1);
+	}
 	lst_add_node(&(*list), node);
 	return (len);
 }
 
-int	read_buff(t_list **list, int fd)
+ssize_t	read_buff_to_list(t_list **list, int fd)
 {
 	char	*buffer;
-	int		i;
-	int		read_len;
-	int		len;
+	ssize_t	i;
+	ssize_t	read_len;
+	ssize_t	node_len;
 
 	buffer = (char *)malloc(BUFFER_SIZE * sizeof(char) + 1);
 	if (!buffer)
 		return (-1);
 	read_len = 1;
-	while (read_len && (!*list || !(*list)->nl) && (len >= 0))
+	node_len = 0;
+	while (read_len && (node_len >= 0) && (!*list || !(*list)->nl))
 	{
 		read_len = read(fd, buffer, BUFFER_SIZE);
 		if (read_len < 0)
 			break ;
 		buffer[read_len] = '\0';
 		i = 0;
-		while ((i < read_len) && (len >= 0))
+		while ((i < read_len) && (node_len >= 0))
 		{
-			len = lst_add(&(buffer[i]), &(*list));
-			if (len != -1)
-				i += len;
+			node_len = add_node_to_list(&(buffer[i]), &(*list));
+			i += node_len;
 		}
 	}
 	free(buffer);
-	return (read_len); // No cambiar
+	return (read_len);
 }
 
 char	*get_next_line(int fd)
 {
-	int				len;
+	ssize_t			len;
 	char			*line;
 	static t_list	*list;
 
@@ -120,7 +119,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	len = 0;
 	if (!list || !list->nl)
-		len = read_buff(&list, fd);
+		len = read_buff_to_list(&list, fd);
 	if ((len < 0) || !list)
 	{
 		lst_free(&list);
