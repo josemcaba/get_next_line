@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:50:52 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/23 09:31:52 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/23 12:12:08 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 80
 # endif
 
 # include <stdlib.h>

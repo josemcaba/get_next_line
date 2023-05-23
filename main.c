@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 19:54:52 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/20 21:35:02 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/23 12:08:04 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	main(int argc, char *argv[])
 		line = get_next_line(fd);
 		if (!line)
 			break ;
-		printf("%s-.-", line);
+		printf("%s", line);
 		free(line);
 	}
 	if (close(fd) == -1)

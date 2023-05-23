@@ -6,13 +6,13 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:55:23 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/17 01:39:17 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/23 12:09:39 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-t_list	*lst_new_node(char *content, int nl_flag, int len)
+t_list	*lst_new_node(char *content, int nl_flag, size_t len)
 {
 	t_list	*node;
 
@@ -66,9 +66,9 @@ void	mem_cpy_str(char *dst, char *src, size_t len)
 			*(dst + len) = *(src + len);
 }
 
-int	str_len(char *str, int *nl_flag)
+size_t	str_len(char *str, int *nl_flag)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	*nl_flag = 0;

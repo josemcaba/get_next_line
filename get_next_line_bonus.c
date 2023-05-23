@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/20 19:28:18 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/23 12:22:16 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*alloc_line(t_list **list)
 {
 	int		nl_flag;
 	t_list	*node;
-	int		len;
+	size_t	len;
 	char	*line;
 
 	nl_flag = 0;
@@ -37,7 +37,7 @@ char	*write_line(t_list **list)
 	t_list	*next_node;
 	int		nl_flag;
 	char	*line;
-	int		i;
+	size_t	i;
 
 	line = alloc_line(&(*list));
 	if (!line)
@@ -58,69 +58,82 @@ char	*write_line(t_list **list)
 	return (line);
 }
 
-int	lst_add(char *buffer, t_list **list, int read_len)
+ssize_t	add_node_to_list(char *buffer, t_list **list, ssize_t read_len)
 {
-	int		len;
+	ssize_t	len;
 	int		nl_flag;
 	t_list	*node;
 	char	*content;
-	int		i;
+	ssize_t	i;
 
 	i = 0;
-	while (i < read_len)
-	{
-		len = str_len(&buffer[i], &nl_flag);
+	len = 0;
+	while ((i < read_len) && (len >= 0))
+	{	
+		len = str_len(&(buffer[i]), &nl_flag);
 		content = (char *)malloc(len * sizeof(char) + 1);
 		if (!content)
 			return (-1);
-		mem_cpy_str(content, &buffer[i], len);
+		mem_cpy_str(content, &(buffer[i]), len);
 		node = lst_new_node(content, nl_flag, len);
 		if (!node)
+		{
+			free(content);
 			return (-1);
+		}
 		lst_add_node(&(*list), node);
 		i += len;
 	}
-	return (read_len);
+	return (len);
 }
 
-int	read_buff(t_list **list, int fd)
+ssize_t	read_buff_to_list(t_list **list, int fd)
 {
 	char	*buffer;
-	int		read_len;
+	ssize_t	read_len;
+	ssize_t	node_len;
 
 	buffer = (char *)malloc(BUFFER_SIZE * sizeof(char) + 1);
 	if (!buffer)
 		return (-1);
 	read_len = 1;
-	while (read_len && (!*list || !(*list)->nl))
+	node_len = 0;
+	while (read_len && (node_len >= 0) && (!*list || !(*list)->nl))
 	{
 		read_len = read(fd, buffer, BUFFER_SIZE);
 		if (read_len < 0)
+		{
+			lst_free(&(*list));
 			break ;
+		}
 		buffer[read_len] = '\0';
-		read_len = lst_add(buffer, &(*list), read_len);
+		node_len = add_node_to_list(buffer, &(*list), read_len);
 	}
 	free(buffer);
-	return (read_len);
+	return (read_len * node_len);
 }
 
 char	*get_next_line(int fd)
 {
-	int				len;
+	ssize_t			len;
 	char			*line;
-	static t_list	*list[1024];
+	static t_list	*list[FD_MAX];
 
 	if ((fd < 0) || BUFFER_SIZE <= 0)
 		return (NULL);
 	len = 0;
 	if (!list[fd] || !list[fd]->nl)
-		len = read_buff(&list[fd], fd);
+		len = read_buff_to_list(&list[fd], fd);
 	if ((len < 0) || !list[fd])
 	{
 		lst_free(&list[fd]);
-		line = NULL;
+		return (NULL);
 	}
-	else
-		line = write_line(&list[fd]);
+	line = write_line(&list[fd]);
+	if (!line)
+	{
+		lst_free(&list[fd]);
+		return (NULL);
+	}
 	return (line);
 }

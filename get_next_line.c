@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/23 09:50:21 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/23 11:56:12 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,32 +58,38 @@ char	*write_line(t_list **list)
 	return (line);
 }
 
-ssize_t	add_node_to_list(char *buffer, t_list **list)
+ssize_t	add_node_to_list(char *buffer, t_list **list, ssize_t read_len)
 {
 	ssize_t	len;
 	int		nl_flag;
 	t_list	*node;
 	char	*content;
+	ssize_t	i;
 
-	len = str_len(buffer, &nl_flag);
-	content = (char *)malloc(len * sizeof(char) + 1);
-	if (!content)
-		return (-1);
-	mem_cpy_str(content, buffer, len);
-	node = lst_new_node(content, nl_flag, len);
-	if (!node)
-	{
-		free(content);
-		return (-1);
+	i = 0;
+	len = 0;
+	while ((i < read_len) && (len >= 0))
+	{	
+		len = str_len(&(buffer[i]), &nl_flag);
+		content = (char *)malloc(len * sizeof(char) + 1);
+		if (!content)
+			return (-1);
+		mem_cpy_str(content, &(buffer[i]), len);
+		node = lst_new_node(content, nl_flag, len);
+		if (!node)
+		{
+			free(content);
+			return (-1);
+		}
+		lst_add_node(&(*list), node);
+		i += len;
 	}
-	lst_add_node(&(*list), node);
 	return (len);
 }
 
 ssize_t	read_buff_to_list(t_list **list, int fd)
 {
 	char	*buffer;
-	ssize_t	i;
 	ssize_t	read_len;
 	ssize_t	node_len;
 
@@ -101,12 +107,7 @@ ssize_t	read_buff_to_list(t_list **list, int fd)
 			break ;
 		}
 		buffer[read_len] = '\0';
-		i = 0;
-		while ((i < read_len) && (node_len >= 0))
-		{
-			node_len = add_node_to_list(&(buffer[i]), &(*list));
-			i += node_len;
-		}
+		node_len = add_node_to_list(buffer, &(*list), read_len);
 	}
 	free(buffer);
 	return (read_len * node_len);
