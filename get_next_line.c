@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/20 22:16:11 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/23 09:50:21 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,10 @@ ssize_t	read_buff_to_list(t_list **list, int fd)
 	{
 		read_len = read(fd, buffer, BUFFER_SIZE);
 		if (read_len < 0)
+		{
+			lst_free(&(*list));
 			break ;
+		}
 		buffer[read_len] = '\0';
 		i = 0;
 		while ((i < read_len) && (node_len >= 0))
@@ -106,7 +109,7 @@ ssize_t	read_buff_to_list(t_list **list, int fd)
 		}
 	}
 	free(buffer);
-	return (read_len);
+	return (read_len * node_len);
 }
 
 char	*get_next_line(int fd)
@@ -126,5 +129,10 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	line = write_line(&list);
+	if (!line)
+	{
+		lst_free(&list);
+		return (NULL);
+	}
 	return (line);
 }
