@@ -11,110 +11,56 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "../libft/libft.h"
 
-char	*alloc_line(t_list **list)
+char	*ft_strchr(const char *str, int c)
 {
-	int		nl_flag;
-	t_list	*node;
-	size_t	len;
-	char	*line;
-
-	nl_flag = 0;
-	node = *list;
-	len = 0;
-	while (node && !nl_flag)
-	{
-		len += node->len;
-		nl_flag = node->nl_flag;
-		node = node->next;
-	}
-	line = (char *)malloc(len * sizeof(char) + 1);
-	return (line);
+	if (!str)
+		return (NULL);
+	while (*str && (*str != (char)c))
+		str++;
+	if (*str == (char)c)
+		return ((char *)str);
+	return (0);
 }
 
-char	*write_line(t_list **list)
+size_t	ft_strlen(const char *s)
 {
-	t_list	*next_node;
-	int		nl_flag;
-	char	*line;
 	size_t	i;
 
-	line = alloc_line(&(*list));
-	if (!line)
+	i = 0;
+	while (s && s[i])
+		i++;
+	return (i);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*str;
+	size_t	len;
+	size_t	i;
+	size_t	j;
+
+	len = ft_strlen(s1) + ft_strlen(s2);
+	str = (char *)malloc(len * sizeof(char) + 1);
+	if (!str)
 		return (NULL);
-	nl_flag = 0;
 	i = 0;
-	while (*list && !nl_flag)
+	while (s1 && s1[i])
 	{
-		nl_flag = (*list)->nl_flag;
-		mem_cpy_str(&line[i], (*list)->content, (*list)->len);
-		i += (*list)->len;
-		next_node = (*list)->next;
-		free((*list)->content);
-		free(*list);
-		*list = next_node;
+		str[i] = s1[i];
+		i++;
 	}
-	line[i] = '\0';
-	return (line);
-}
-
-ssize_t	add_node_to_list(char *buffer, t_list **list, ssize_t read_len)
-{
-	ssize_t	len;
-	int		nl_flag;
-	t_list	*node;
-	char	*content;
-	ssize_t	i;
-
-	i = 0;
-	len = 0;
-	while ((i < read_len) && (len >= 0))
-	{	
-		len = str_len(&(buffer[i]), &nl_flag);
-		content = (char *)malloc(len * sizeof(char) + 1);
-		if (!content)
-			return (-1);
-		mem_cpy_str(content, &(buffer[i]), len);
-		node = lst_new_node(content, nl_flag, len);
-		if (!node)
-		{
-			free(content);
-			return (-1);
-		}
-		lst_add_node(&(*list), node);
-		i += len;
-	}
-	return (len);
-}
-
-ssize_t	read_buff_to_list(t_list **list, int fd)
-{
-	char	*buffer;
-	ssize_t	read_len;
-	ssize_t	node_len;
-
-	buffer = (char *)malloc(BUFFER_SIZE * sizeof(char) + 1);
-	if (!buffer)
-		return (-1);
-	read_len = 1;
-	node_len = 0;
-	while (read_len && (node_len >= 0) && (!*list || !(*list)->nl))
+	while (s2 && s2[j])
 	{
-		read_len = read(fd, buffer, BUFFER_SIZE);
-		if (read_len < 0)
-		{
-			lst_free(&(*list));
-			break ;
-		}
-		buffer[read_len] = '\0';
-		node_len = add_node_to_list(buffer, &(*list), read_len);
+		str[i] = s2[j];
+		i++;
+		j++;
 	}
-	free(buffer);
-	return (read_len * node_len);
+	str[i] = '\0';
+	return (str);
 }
 
-void	read_file(int fd, char *buffer)
+char	*read_file(int fd, char *buffer)
 {
 	char	*tmp_buff;
 	ssize_t	len;
@@ -122,7 +68,7 @@ void	read_file(int fd, char *buffer)
 
 	tmp_buff = (char *)malloc(BUFFER_SIZE * sizeof(char) + 1);
 	if (!tmp_buff)
-		return;
+		return (NULL);
 	len = 1;
 	while ((len > 0) && !ft_strchr(buffer, '\n'))
 	{
@@ -132,7 +78,7 @@ void	read_file(int fd, char *buffer)
 			if (buffer)
 				free(buffer);
 			free (tmp_buff);
-			return;
+			return (NULL);
 		}
 		tmp_buff[len] = '\0';
 		tmp = ft_strjoin(buffer, tmp_buff);
@@ -140,8 +86,61 @@ void	read_file(int fd, char *buffer)
 		buffer = tmp;
 	}
 	free(tmp_buff);
+	return (buffer);
 }
 
+char	*read_line(char *buffer)
+{
+	size_t	i;
+	char	*line;
+
+	i = 0;
+	if (buffer[i] == '\0')
+		return (NULL);
+	while (buffer[i] != '\n' && buffer[i] != '\0')
+		i++;
+	line = (char *)malloc(i * sizeof(char) + 2);
+	if (!line)
+		return (NULL);
+	i = 0;
+	while (buffer[i] != '\n' && buffer[i] != '\0')
+	{
+		line[i] = buffer[i];
+		i++;
+	}
+	line[i] = buffer[i];
+	line[i + 1] = '\0';
+	return (line);
+}
+
+char	*adjust_buff(char *buffer)
+{
+	size_t	i;
+	char	*tmp_buff;
+	size_t	j;
+
+	i = 0;
+	while (buffer[i] != '\n' && buffer[i] != '\0')
+		i++;
+	if (buffer[i] == '\0')
+	{
+		free(buffer);
+		return(NULL);
+	}
+	tmp_buff = (char *)malloc(sizeof(char) * (ft_strlen(buffer) - i));
+	if (!tmp_buff)
+	{
+		free(buffer);
+		return(NULL);
+	}
+	i++;
+	j = 0;
+	while (buffer[i] != '\0')
+		tmp_buff[j++] = buffer[i++];
+	tmp_buff = '\0';
+	free(buffer);
+	return (tmp_buff);
+}
 char	*get_next_line(int fd)
 {
 	static char	*buffer;
@@ -149,36 +148,10 @@ char	*get_next_line(int fd)
 
 	if ((fd < 0) || BUFFER_SIZE <= 0)
 		return (NULL);
-	read_file(fd, buffer);
+	buffer = read_file(fd, buffer);
 	if (!buffer)
 		return (NULL);
-	line = buffer;
-//	line = read_line(buffer);
-//	adjust_buff(buffer);
+	line = read_line(buffer);
+	buffer = adjust_buff(buffer);
 	return (line);
 }
-
-// char	*get_next_line(int fd)
-// {
-// 	ssize_t			len;
-// 	char			*line;
-// 	static t_list	*list;
-
-// 	if ((fd < 0) || BUFFER_SIZE <= 0)
-// 		return (NULL);
-// 	len = 0;
-// 	if (!list || !list->nl)
-// 		len = read_buff_to_list(&list, fd);
-// 	if ((len < 0) || !list)
-// 	{
-// 		lst_free(&list);
-// 		return (NULL);
-// 	}
-// 	line = write_line(&list);
-// 	if (!line)
-// 	{
-// 		lst_free(&list);
-// 		return (NULL);
-// 	}
-// 	return (line);
-// }
