@@ -15,17 +15,17 @@
 #include <unistd.h>
 #include "get_next_line.h"
 
-void	ft_leaks(void)
-{
-	system("leaks -q a.exe");
-}
+// void	ft_leaks(void)
+// {
+// 	system("leaks -q a.exe");
+// }
 
 int	main(int argc, char *argv[])
 {
 	int		fd;
 	char	*line;
 
-	atexit(ft_leaks);
+//	atexit(ft_leaks);
 	printf("%d : %s\nBUFFER SIZE = %d\n", argc, argv[argc - 1], BUFFER_SIZE);
 	fd = open ("lorem.txt", O_RDONLY);
 	if (fd == -1)
@@ -38,7 +38,7 @@ int	main(int argc, char *argv[])
 		line = get_next_line(fd);
 		if (!line)
 			break ;
-		printf("%s", line);
+		printf("%s%%", line);
 		free(line);
 	}
 	if (close(fd) == -1)

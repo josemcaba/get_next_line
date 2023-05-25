@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "../libft/libft.h"
 
 char	*alloc_line(t_list **list)
 {
@@ -113,27 +114,71 @@ ssize_t	read_buff_to_list(t_list **list, int fd)
 	return (read_len * node_len);
 }
 
+void	read_file(int fd, char *buffer)
+{
+	char	*tmp_buff;
+	ssize_t	len;
+	char	*tmp;
+
+	tmp_buff = (char *)malloc(BUFFER_SIZE * sizeof(char) + 1);
+	if (!tmp_buff)
+		return;
+	len = 1;
+	while ((len > 0) && !ft_strchr(buffer, '\n'))
+	{
+		len = read(fd, tmp_buff, BUFFER_SIZE);
+		if (len < 0)
+		{
+			if (buffer)
+				free(buffer);
+			free (tmp_buff);
+			return;
+		}
+		tmp_buff[len] = '\0';
+		tmp = ft_strjoin(buffer, tmp_buff);
+		free(buffer);
+		buffer = tmp;
+	}
+	free(tmp_buff);
+}
+
 char	*get_next_line(int fd)
 {
-	ssize_t			len;
-	char			*line;
-	static t_list	*list;
+	static char	*buffer;
+	char		*line;
 
 	if ((fd < 0) || BUFFER_SIZE <= 0)
 		return (NULL);
-	len = 0;
-	if (!list || !list->nl)
-		len = read_buff_to_list(&list, fd);
-	if ((len < 0) || !list)
-	{
-		lst_free(&list);
+	read_file(fd, buffer);
+	if (!buffer)
 		return (NULL);
-	}
-	line = write_line(&list);
-	if (!line)
-	{
-		lst_free(&list);
-		return (NULL);
-	}
+	line = buffer;
+//	line = read_line(buffer);
+//	adjust_buff(buffer);
 	return (line);
 }
+
+// char	*get_next_line(int fd)
+// {
+// 	ssize_t			len;
+// 	char			*line;
+// 	static t_list	*list;
+
+// 	if ((fd < 0) || BUFFER_SIZE <= 0)
+// 		return (NULL);
+// 	len = 0;
+// 	if (!list || !list->nl)
+// 		len = read_buff_to_list(&list, fd);
+// 	if ((len < 0) || !list)
+// 	{
+// 		lst_free(&list);
+// 		return (NULL);
+// 	}
+// 	line = write_line(&list);
+// 	if (!line)
+// 	{
+// 		lst_free(&list);
+// 		return (NULL);
+// 	}
+// 	return (line);
+// }
