@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:50:52 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/23 14:24:31 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/26 14:08:15 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #  define BUFFER_SIZE 80
 # endif
 
-# define FD_MAX 1024
+# define FD_MAX 2048
 
 # include <stdlib.h>
 # include <unistd.h>

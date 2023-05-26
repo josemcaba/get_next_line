@@ -6,13 +6,13 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/23 12:22:16 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/05/26 19:22:41 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-char	*alloc_line(t_list **list)
+static char	*alloc_line(t_list **list)
 {
 	int		nl_flag;
 	t_list	*node;
@@ -32,7 +32,7 @@ char	*alloc_line(t_list **list)
 	return (line);
 }
 
-char	*write_line(t_list **list)
+static char	*write_line(t_list **list)
 {
 	t_list	*next_node;
 	int		nl_flag;
@@ -58,7 +58,7 @@ char	*write_line(t_list **list)
 	return (line);
 }
 
-ssize_t	add_node_to_list(char *buffer, t_list **list, ssize_t read_len)
+static ssize_t	add_node_to_list(char *buffer, t_list **list, ssize_t read_len)
 {
 	ssize_t	len;
 	int		nl_flag;
@@ -87,7 +87,7 @@ ssize_t	add_node_to_list(char *buffer, t_list **list, ssize_t read_len)
 	return (len);
 }
 
-ssize_t	read_buff_to_list(t_list **list, int fd)
+static ssize_t	read_buff_to_list(t_list **list, int fd)
 {
 	char	*buffer;
 	ssize_t	read_len;
