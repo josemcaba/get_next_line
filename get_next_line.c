@@ -6,7 +6,7 @@
 /*   By: jocaball <jocaball@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:51:14 by jocaball          #+#    #+#             */
-/*   Updated: 2023/05/26 19:13:24 by jocaball         ###   ########.fr       */
+/*   Updated: 2023/12/28 19:46:05 by jocaball         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static ssize_t	add_node_to_list(char *buffer, t_list **list, ssize_t read_len)
 	i = 0;
 	len = 0;
 	while ((i < read_len) && (len >= 0))
-	{	
+	{
 		len = str_len(&(buffer[i]), &nl_flag);
 		content = (char *)malloc(len * sizeof(char) + 1);
 		if (!content)
