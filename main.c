@@ -17,7 +17,7 @@
 
 void	ft_leaks(void)
 {
-	system("leaks -q a.out");
+	system("valgrind --leak-check=full a.exe");
 }
 
 int	main(int argc, char *argv[])

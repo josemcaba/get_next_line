@@ -17,12 +17,10 @@ all : $(NAME)
 $(NAME) : $(SRC) $(HDR)
 	$(CC) $(SRC) -o $(NAME)
 	./a.exe lorem.txt
-	rm ./a.exe
 
 bonus : $(SRC_BONUS) $(HDR_BONUS)
 	$(CC) $(SRC_BONUS) -o $(NAME)
 	./a.exe lorem.txt
-	rm ./a.exe
 
 clean :
 	rm -f $(OBJ)
